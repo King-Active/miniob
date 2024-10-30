@@ -80,45 +80,46 @@ extern int yydebug;
     STRING_T = 281,                /* STRING_T  */
     DATE_T = 282,                  /* DATE_T  */
     FLOAT_T = 283,                 /* FLOAT_T  */
-    BOOL_T = 284,                  /* BOOL_T  */
-    HELP = 285,                    /* HELP  */
-    EXIT = 286,                    /* EXIT  */
-    DOT = 287,                     /* DOT  */
-    INTO = 288,                    /* INTO  */
-    VALUES = 289,                  /* VALUES  */
-    FROM = 290,                    /* FROM  */
-    WHERE = 291,                   /* WHERE  */
-    AND = 292,                     /* AND  */
-    SET = 293,                     /* SET  */
-    ON = 294,                      /* ON  */
-    LOAD = 295,                    /* LOAD  */
-    DATA = 296,                    /* DATA  */
-    INFILE = 297,                  /* INFILE  */
-    EXPLAIN = 298,                 /* EXPLAIN  */
-    STORAGE = 299,                 /* STORAGE  */
-    FORMAT = 300,                  /* FORMAT  */
-    EQ = 301,                      /* EQ  */
-    LT = 302,                      /* LT  */
-    GT = 303,                      /* GT  */
-    LE = 304,                      /* LE  */
-    GE = 305,                      /* GE  */
-    NE = 306,                      /* NE  */
-    MAX = 307,                     /* MAX  */
-    MIN = 308,                     /* MIN  */
-    SUM = 309,                     /* SUM  */
-    AVG = 310,                     /* AVG  */
-    COUNT = 311,                   /* COUNT  */
-    NULLABLE = 312,                /* NULLABLE  */
-    NOTNULL = 313,                 /* NOTNULL  */
-    NULL_ = 314,                   /* NULL_  */
-    ORDER = 315,                   /* ORDER  */
-    ASC = 316,                     /* ASC  */
-    NUMBER = 317,                  /* NUMBER  */
-    FLOAT = 318,                   /* FLOAT  */
-    ID = 319,                      /* ID  */
-    SSS = 320,                     /* SSS  */
-    BOOLEAN = 321,                 /* BOOLEAN  */
-    UMINUS = 322                   /* UMINUS  */
+    VECTOR_T = 284,                /* VECTOR_T  */
+    BOOL_T = 285,                  /* BOOL_T  */
+    HELP = 286,                    /* HELP  */
+    EXIT = 287,                    /* EXIT  */
+    DOT = 288,                     /* DOT  */
+    INTO = 289,                    /* INTO  */
+    VALUES = 290,                  /* VALUES  */
+    FROM = 291,                    /* FROM  */
+    WHERE = 292,                   /* WHERE  */
+    AND = 293,                     /* AND  */
+    SET = 294,                     /* SET  */
+    ON = 295,                      /* ON  */
+    LOAD = 296,                    /* LOAD  */
+    DATA = 297,                    /* DATA  */
+    INFILE = 298,                  /* INFILE  */
+    EXPLAIN = 299,                 /* EXPLAIN  */
+    STORAGE = 300,                 /* STORAGE  */
+    FORMAT = 301,                  /* FORMAT  */
+    EQ = 302,                      /* EQ  */
+    LT = 303,                      /* LT  */
+    GT = 304,                      /* GT  */
+    LE = 305,                      /* LE  */
+    GE = 306,                      /* GE  */
+    NE = 307,                      /* NE  */
+    MAX = 308,                     /* MAX  */
+    MIN = 309,                     /* MIN  */
+    SUM = 310,                     /* SUM  */
+    AVG = 311,                     /* AVG  */
+    COUNT = 312,                   /* COUNT  */
+    NULLABLE = 313,                /* NULLABLE  */
+    NOTNULL = 314,                 /* NOTNULL  */
+    NULL_ = 315,                   /* NULL_  */
+    ORDER = 316,                   /* ORDER  */
+    ASC = 317,                     /* ASC  */
+    NUMBER = 318,                  /* NUMBER  */
+    FLOAT = 319,                   /* FLOAT  */
+    ID = 320,                      /* ID  */
+    SSS = 321,                     /* SSS  */
+    BOOLEAN = 322,                 /* BOOLEAN  */
+    UMINUS = 323                   /* UMINUS  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -127,7 +128,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 127 "yacc_sql.y"
+#line 129 "yacc_sql.y"
 
   ParsedSqlNode *                            sql_node;
   ConditionSqlNode *                         condition;
@@ -150,7 +151,7 @@ union YYSTYPE
   float                                      floats;
   bool                                       boolean;
 
-#line 154 "yacc_sql.hpp"
+#line 155 "yacc_sql.hpp"
 
 };
 typedef union YYSTYPE YYSTYPE;

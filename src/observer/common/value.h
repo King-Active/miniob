@@ -21,6 +21,8 @@ See the Mulan PSL v2 for more details. */
 #include "common/type/data_type.h"
 #include "common/type/date_type.h"
 #include "common/null.h"
+#include "common/myVector.h"
+#include "common/type/vector_type.h"
 #include <cstdint>
 
 /**
@@ -39,6 +41,7 @@ public:
   friend class BooleanType;
   friend class CharType;
   friend class DateType;
+  friend class VectorType;
 
   Value() = default;
 
@@ -51,6 +54,7 @@ public:
   explicit Value(bool val);
   explicit Value(const char *s, int len = 0);
   explicit Value(Null val);
+  explicit Value(myVector val);
   
   Value(const Value &other);
   Value(Value &&other);
@@ -121,6 +125,7 @@ public:
   void set_value(const Value &value);
   void set_boolean(bool val);
 
+  
   string to_string() const;
 
   int compare(const Value &other) const;
@@ -140,6 +145,7 @@ public:
   string get_string() const;
   bool   get_boolean() const;
   Date   get_date() const;
+  myVector get_myVector() const;
 
 private:
   void set_int(int val);
@@ -149,6 +155,7 @@ private:
   void set_date(const uint16_t year, const uint8_t month, const uint8_t day);
   void set_date(const Date &val);
   void set_string_from_other(const Value &other);
+  void set_myVector(const myVector val);
 
 private:
   AttrType attr_type_ = AttrType::UNDEFINED;
@@ -161,8 +168,9 @@ private:
     bool    bool_value_;
     char   *pointer_value_;
     Date    date_value_;
-    Null    null_value;
-  } value_ = {.int_value_ = 0};
+    myVector myVector_value_;
+    Null    null_value_;
+  }value_ = {.int_value_ = 0};
 
   /// 是否申请并占有内存, 目前对于 CHARS 类型 own_data_ 为true, 其余类型 own_data_ 为false
   bool own_data_ = false;

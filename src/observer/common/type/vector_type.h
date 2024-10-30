@@ -11,3 +11,30 @@ See the Mulan PSL v2 for more details. */
 #pragma once
 
 #include "common/type/data_type.h"
+
+#ifndef VECTOR_TYPE_H_
+#define VECTOR_TYPE_H_
+
+/**
+ * @brief 向量数据类型
+ * @ingroup DataType
+ */
+class VectorType : public DataType
+{
+public:
+  VectorType() : DataType(AttrType::VECTORS) {}
+  virtual ~VectorType() = default;
+
+  RC to_string(const Value &val, string &result) const override;
+  
+  /* 向量不能比大小 */
+  int compare(const Value &left, const Value &right) const override;        
+
+  /* 向量不能数据类型转换 */
+  RC cast_to(const Value &val, AttrType type, Value &result) const override;        
+
+  /* 代价无穷大 */
+  int cast_cost(AttrType type) override;
+};
+
+#endif

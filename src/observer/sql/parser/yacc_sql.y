@@ -10,6 +10,7 @@
 #include "sql/parser/lex_sql.h"
 #include "sql/expr/expression.h"
 #include "common/null.h"
+#include "common/myVector.h"
 
 using namespace std;
 
@@ -88,6 +89,7 @@ UnboundAggregateExpr *create_aggregate_expression(const char *aggregate_name,
         STRING_T
         DATE_T
         FLOAT_T
+        VECTOR_T
         BOOL_T
         HELP
         EXIT
@@ -152,6 +154,7 @@ UnboundAggregateExpr *create_aggregate_expression(const char *aggregate_name,
 %token <string> ID
 %token <string> SSS
 %token <boolean> BOOLEAN
+
 //非终结符
 
 /** type 定义了各种解析后的结果输出的是什么类型。类型对应了 union 中的定义的成员变量名称 **/     
@@ -360,7 +363,9 @@ attr_def:
 // id int(3) not null
 // id int nullable
 // id int
+// id vector(3)
 // number 为数据宽度
+
     ID type LBRACE number RBRACE NOTNULL{
       $$ = new AttrInfoSqlNode;
       $$->type = (AttrType)$2;
@@ -425,6 +430,7 @@ type:
     | FLOAT_T  { $$ = static_cast<int>(AttrType::FLOATS); }
     | DATE_T   { $$ = static_cast<int>(AttrType::DATES); }
     | BOOL_T   { $$ = static_cast<int>(AttrType::BOOLEANS);}
+    | VECTOR_T    { $$ = static_cast<int>(AttrType::VECTORS);}
     ;
 insert_stmt:        /*insert   语句的语法解析树*/
     INSERT INTO ID VALUES LBRACE value value_list RBRACE 
@@ -491,10 +497,19 @@ value:
       @$ = @1;
     }
     |SSS {
-      char *tmp = common::substr($1,1,strlen($1)-2);
-      $$ = new Value(tmp);
-      free(tmp);
-      free($1);
+// 如果是向量，即以 [ 开头，以 ] 结尾
+      if(strlen($1) >= 4 && $1[1] == '[' && $1[strlen($1)-2] == ']'){
+        char * tmp = common::substr($1, 2, strlen($1)-3);
+        myVector myVector (tmp);  // 此时已经提取出数字了，指针可以释放
+        $$ = new Value(myVector);     
+        free(tmp);
+        free($1);
+      }else{
+        char *tmp = common::substr($1,1,strlen($1)-2);
+        $$ = new Value(tmp);
+        free(tmp);
+        free($1);
+      }
     }
     ;
 storage_format:
