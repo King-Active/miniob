@@ -4,7 +4,7 @@
 struct myVector {
 private:
     float* my_vector_value_ = nullptr;    
-    int             = -1;
+    int length_ = -1;
 
 public:
     myVector(const char* str) {

@@ -59,5 +59,4 @@ protected:
   bool     visible_;
   int      field_id_;     // 作为 isNullBitMap 的位索引
   bool     nullable_;     // 标识该字段是否为 NULL
-  // int vecsixe;
 };
