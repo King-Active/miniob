@@ -354,6 +354,7 @@ private:
 class ArithmeticExpr : public Expression
 {
 public:
+  /* Acking666 */
   enum class Type
   {
     ADD,
@@ -361,6 +362,9 @@ public:
     MUL,
     DIV,
     NEGATIVE,
+    L2_DISTANCE,
+    COS_DISTANCE,
+    INNER_PRODUCT
   };
 
 public:

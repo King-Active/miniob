@@ -38,7 +38,7 @@ public:
     }
 
     const ExprPointerType &expression = expressions_[index];
-    return get_value(expression, cell);
+    return get_value(expression, cell); // !!!!
   }
 
   RC spec_at(int index, TupleCellSpec &spec) const override

@@ -109,6 +109,21 @@ public:
   {
     return DataType::type_instance(result.attr_type())->negative(value, result);
   }
+  /* Acking666 */
+  static RC l2Distance(const Value &left, const Value &right, Value &result)
+  {
+    return DataType::type_instance(result.attr_type())->l2Distance(left, right, result);
+  }
+
+  static RC cosDistance(const Value &left, const Value &right, Value &result)
+  {
+    return DataType::type_instance(result.attr_type())->cosDistance(left, right, result);
+  }
+
+  static RC innerProduct(const Value &left, const Value &right, Value &result)
+  {
+    return DataType::type_instance(result.attr_type())->innerProduct(left, right, result);
+  }
 
   static RC cast_to(const Value &value, AttrType to_type, Value &result)
   {
@@ -159,7 +174,7 @@ private:
 
 private:
   AttrType attr_type_ = AttrType::UNDEFINED;
-  int      length_    = 0;
+  int      length_    = 0;    // 存储真正的字节数
 
   union Val
   {

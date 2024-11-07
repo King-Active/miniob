@@ -316,7 +316,14 @@ AttrType ArithmeticExpr::value_type() const
 
   if (left_->value_type() == AttrType::INTS && right_->value_type() == AttrType::INTS &&
       arithmetic_type_ != Type::DIV) {
-    return AttrType::INTS;
+      return AttrType::INTS;
+  }
+  
+  /* Acking666 */
+  /* 向量不进行除法运算 */
+  if (left_->value_type() == AttrType::VECTORS && right_->value_type() == AttrType::VECTORS &&
+      arithmetic_type_ != Type::DIV) {
+      return AttrType::VECTORS;
   }
 
   return AttrType::FLOATS;
@@ -366,6 +373,31 @@ RC ArithmeticExpr::calc_value(const Value &left_value, const Value &right_value,
 
     case Type::NEGATIVE: {
       Value::negative(left_value, value);
+    } break;
+
+    /* Acking666 */
+    case Type::L2_DISTANCE: {
+      if(left_value.attr_type() != AttrType::VECTORS || right_value.attr_type() != AttrType::VECTORS){
+        LOG_WARN( "Unsupported l2_distance operator between no vector type!" );
+        return RC::UNSUPPORTED;
+      }
+      Value::l2Distance(left_value, right_value, value);
+    } break;
+
+    case Type::COS_DISTANCE: {
+      if(left_value.attr_type() != AttrType::VECTORS || right_value.attr_type() != AttrType::VECTORS){
+        LOG_WARN( "Unsupported cos_distance operator between no vector type!" );
+        return RC::UNSUPPORTED;
+      }
+      Value::cosDistance(left_value, right_value, value);
+    } break;
+
+    case Type::INNER_PRODUCT: {
+      if(left_value.attr_type() != AttrType::VECTORS || right_value.attr_type() != AttrType::VECTORS){
+        LOG_WARN( "Unsupported inner_product operator between no vector type!" );
+        return RC::UNSUPPORTED;
+      }
+      Value::innerProduct(left_value, right_value, value);
     } break;
 
     default: {

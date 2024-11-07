@@ -3,10 +3,15 @@
 
 struct myVector {
 private:
-    float* my_vector_value_ = nullptr;    
-    int length_ = -1;
+
+    /* 向量链表 */
+    float* my_vector_value_ = nullptr;
+
+    /* 向量元素的个数 */    
+    int length_ = -1;       
 
 public:
+
     myVector(const char* str) {
         if(str == nullptr){
             this->my_vector_value_ = nullptr;
@@ -47,7 +52,14 @@ public:
         this->length_ = length;
     }
 
-    float* getVector() const{ return my_vector_value_;} 
+    /* Acking666 */
+    float* getVector() const{ 
+        float* floats = new float[length_];
+        for(int i = 0; i < length_; i++){
+            floats[i] = my_vector_value_[i];
+        }
+        return floats;
+    } 
 
     void reset(){
         delete[] my_vector_value_;  ///< Attention: delete[] but not delete !!!
@@ -55,7 +67,15 @@ public:
         length_ = -1;
     }
 
-    int vecLength() const {return length_;}
+    /* 返回向量的字节长度 */
+    int vecLength() const {
+        return length_ * 4;
+    }
+    
+    /* 返回向量元素的个数 */
+    int vecNum() const {
+        return length_ ;
+    }
     
 };
  

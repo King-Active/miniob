@@ -34,7 +34,6 @@ Value::Value(myVector val) { set_myVector(val); }
 
 Value::Value(const char *s, int len /*= 0*/) { set_string(s, len); }
 
-
 Value::Value(const Value &other)
 {
   this->attr_type_ = other.attr_type_;
@@ -48,7 +47,9 @@ Value::Value(const Value &other)
 
     case AttrType::VECTORS: {
       // 由于 vector 内部有指针，因此不能直接复制指针的地址
-      this->value_.myVector_value_ = myVector(other.value_.myVector_value_.getVector(), other.value_.myVector_value_.vecLength());
+      float* floats = other.value_.myVector_value_.getVector();
+      this->value_.myVector_value_ = myVector(floats, other.value_.myVector_value_.vecNum());
+      delete[] floats;
       break;
     } 
 
@@ -68,7 +69,9 @@ Value::Value(Value &&other)
   other.length_    = 0;
 
   if(other.attr_type() == AttrType::VECTORS){
-    this->value_.myVector_value_ = myVector(other.value_.myVector_value_.getVector(), other.value_.myVector_value_.vecLength());
+    float* floats = other.value_.myVector_value_.getVector();
+    this->value_.myVector_value_ = myVector(floats, other.value_.myVector_value_.vecNum());
+    delete[] floats;
   }else{
     this->value_     = other.value_;
   }
@@ -88,6 +91,13 @@ Value &Value::operator=(const Value &other)
       set_string_from_other(other);
     } break;
 
+    case AttrType::VECTORS: {
+      /* Acking666  此处对 myVector 必须执行深拷贝 */
+      float* floats = other.value_.myVector_value_.getVector();
+      this->value_.myVector_value_ = myVector(floats, other.value_.myVector_value_.vecNum());
+      delete[] floats;
+     }break;
+
     default: {
       this->value_ = other.value_;
     } break;
@@ -100,13 +110,20 @@ Value &Value::operator=(Value &&other)
   if (this == &other) {
     return *this;
   }
-  reset();
   this->attr_type_ = other.attr_type_;
   this->length_    = other.length_;
   this->own_data_  = other.own_data_;
   other.own_data_  = false;
   other.length_    = 0;
-  this->value_ = other.value_;
+
+  /* Acking666  此处对 myVector 必须执行深拷贝 */
+  if(other.attr_type_ == AttrType::VECTORS){
+    float* floats = other.value_.myVector_value_.getVector();
+    this->value_.myVector_value_ = myVector(floats, other.value_.myVector_value_.vecNum());
+    delete[] floats;
+  } else {
+    this->value_ = other.value_;
+  }
 
   return *this;
 }
@@ -131,6 +148,7 @@ void Value::reset()
   own_data_  = false;
 }
 
+/* 对于向量而言，此处的 length 为字节数，而非向量的个数 */
 void Value::set_data(char *data, int length)
 {
   switch (attr_type_) {
@@ -153,8 +171,13 @@ void Value::set_data(char *data, int length)
       value_.bool_value_ = *(int *)data != 0;
       length_            = length;
     } break;
+    /* Acking666 */
+    case AttrType::VECTORS:{
+      myVector mv = myVector((float*) data, length / 4);
+      value_.myVector_value_ = mv;
+      length_                = length; 
+    } break;
     default: {
-      // TODO： 向量尚未知如何处理
       LOG_WARN("unknown data type: %d", attr_type_);
     } break;
   }
@@ -196,6 +219,7 @@ void Value::set_myVector(const myVector val) {
   reset();
   attr_type_              = AttrType::VECTORS;
   value_.myVector_value_  = val;
+  /* Acking666 */
   length_                 = val.vecLength();
 }
 
@@ -233,7 +257,6 @@ void Value::set_date(const uint16_t year, const uint8_t month, const uint8_t day
 void Value::set_date(const Date &val) {
   set_date(val.year, val.month, val.day);
 }
-
 
 void Value::set_value(const Value &value)
 {
@@ -278,6 +301,12 @@ const char *Value::data() const
     case AttrType::CHARS: {
       return value_.pointer_value_;
     } break;
+
+    /* Acking666 */
+    case AttrType::VECTORS:{
+      return (const char *)value_.myVector_value_.getVector();
+    } break;
+
     default: {
       return (const char *)&value_;
     } break;
@@ -408,7 +437,7 @@ bool Value::get_boolean() const
       return value_.bool_value_;
     } break;
     case AttrType::VECTORS: {
-      return value_.myVector_value_.vecLength() != 0;
+      return value_.myVector_value_.vecNum() != 0;
     } break;
     default: {
       LOG_WARN("unknown data type. type=%d", attr_type_);

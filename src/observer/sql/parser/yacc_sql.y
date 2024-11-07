@@ -123,6 +123,9 @@ UnboundAggregateExpr *create_aggregate_expression(const char *aggregate_name,
         NULL_
         ORDER
         ASC
+        L2_DISTANCE                  
+        COSINE_DISTANCE                   
+        INNER_PRODUCT                          
 
 
 /** union 中定义各种数据类型，真实生成的代码也是union类型，所以不能有非POD类型的数据 **/
@@ -370,7 +373,7 @@ attr_def:
       $$ = new AttrInfoSqlNode;
       $$->type = (AttrType)$2;
       $$->name = $1;
-      $$->length = $4;
+      $$->length = ((AttrType)$2 == AttrType::VECTORS)? 4*$4 : $4;
       $$->nullable = false;
       free($1);
     }
@@ -379,7 +382,7 @@ attr_def:
       $$ = new AttrInfoSqlNode;
       $$->type = (AttrType)$2;
       $$->name = $1;
-      $$->length = $4;
+      $$->length = ((AttrType)$2 == AttrType::VECTORS)? 4*$4 : $4;
       $$->nullable = true;
       free($1);
     }
@@ -407,7 +410,7 @@ attr_def:
       $$ = new AttrInfoSqlNode;
       $$->type = (AttrType)$2;
       $$->name = $1;
-      $$->length = $4;
+      $$->length = ((AttrType)$2 == AttrType::VECTORS)? 4*$4 : $4;
       $$->nullable = false;
       free($1);
     }
@@ -716,12 +719,6 @@ expression:
         $$ = create_aggregate_expression("MAX", $3, sql_string, &@$);
       }
     }  
-    /*
-    UnboundAggregateExpr *create_aggregate_expression(const char *aggregate_name,
-                                           Expression *child,
-                                           const char *sql_string,
-                                           YYLTYPE *llocp)
-    */
     | SUM LBRACE expression RBRACE{
       if($3 -> type() != ExprType::UNBOUND_FIELD){
         delete $3;
@@ -752,7 +749,19 @@ expression:
     | COUNT LBRACE expression RBRACE{
       // count(*) 可以支持
       $$ = create_aggregate_expression("COUNT", $3, sql_string, &@$);    
-    }  
+    }
+    | L2_DISTANCE LBRACE expression COMMA expression RBRACE {
+      // l2_distance('[1,2]' , embedding)
+      $$ = create_arithmetic_expression(ArithmeticExpr::Type::L2_DISTANCE, $3, $5, sql_string, &@$);
+    }
+    | COSINE_DISTANCE LBRACE expression COMMA expression RBRACE {
+      // COSINE_DISTANCE('[1,2]' , embedding)
+      $$ = create_arithmetic_expression(ArithmeticExpr::Type::COS_DISTANCE, $3, $5, sql_string, &@$);
+    }
+    | INNER_PRODUCT LBRACE expression COMMA expression RBRACE {
+      // INNER_PRODUCT('[1,2]' , embedding)
+      $$ = create_arithmetic_expression(ArithmeticExpr::Type::INNER_PRODUCT, $3, $5, sql_string, &@$);
+    }
     ;
 
 rel_attr:

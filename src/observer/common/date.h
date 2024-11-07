@@ -30,6 +30,7 @@ struct Date {
 
     inline std::string to_string() const;
 
+
   private:
     static constexpr std::array<int, 12> daysInMonth = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 

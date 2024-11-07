@@ -93,6 +93,21 @@ public:
    */
   virtual RC negative(const Value &val, Value &result) const { return RC::UNSUPPORTED; }
 
+  /**  
+   * @brief l2距离表达式，仅向量数据类型支持 
+   */
+  virtual RC l2Distance(const Value &left, const Value &right, Value &result) const { return RC::UNSUPPORTED; }
+
+  /**  
+   * @brief 余弦距离表达式，仅向量数据类型支持 
+   */
+  virtual RC cosDistance(const Value &left, const Value &right, Value &result) const { return RC::UNSUPPORTED; }
+
+  /**  
+   * @brief 向量内积，仅向量数据类型支持 
+   */
+  virtual RC innerProduct(const Value &left, const Value &right, Value &result) const { return RC::UNSUPPORTED; }
+
   /**
    * @brief 将 val 转换为 type 类型，并将结果保存到 result 中
    */
