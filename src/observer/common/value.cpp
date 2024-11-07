@@ -304,7 +304,8 @@ const char *Value::data() const
 
     /* Acking666 */
     case AttrType::VECTORS:{
-      return (const char *)value_.myVector_value_.getVector();
+      auto it = (const char *)value_.myVector_value_.getVectorDirectly();
+      return it;
     } break;
 
     default: {

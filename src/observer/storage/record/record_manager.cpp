@@ -299,7 +299,8 @@ RC RowRecordPageHandler::insert_record(Bitmap* isNullBitMap, const char *data, R
   memcpy(record_data, isNullBitMap->getBitmap(), page_header_->isNullBitmap_size);
 
   // 在 record_data 位置插入数据 data，数据大小为 record_real_size
-  memcpy(record_data + (isNullBitMap->getSize()/8 + (isNullBitMap->getSize()%8==0?0:1)), data, page_header_->record_real_size);
+  /* Acking666 */
+  memcpy(record_data + (isNullBitMap->getSize()/8 + (isNullBitMap->getSize()%8==0?0:1)), data, page_header_->record_real_size - ((isNullBitMap->getSize()/8 + (isNullBitMap->getSize()%8==0?0:1))));
 
   // 此内存中的帧被标记为脏
   frame_->mark_dirty();

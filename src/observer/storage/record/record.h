@@ -110,6 +110,13 @@ public:
       free(data_);
       data_ = nullptr;
     }
+
+    /* Acking666 */
+    if(isNullBitMap_ != nullptr){
+      auto it = isNullBitMap_->getBitmap();
+      delete[] it;
+      delete isNullBitMap_;
+    }
   }
 
   Record(const Record &other)

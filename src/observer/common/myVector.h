@@ -8,14 +8,14 @@ private:
     float* my_vector_value_ = nullptr;
 
     /* 向量元素的个数 */    
-    int length_ = -1;       
+    int nums_ = -1;       
 
 public:
 
     myVector(const char* str) {
         if(str == nullptr){
             this->my_vector_value_ = nullptr;
-            this->length_ = -1;
+            this->nums_ = -1;
             return;
         }
 
@@ -41,7 +41,7 @@ public:
         for(size_t i = 0; i < floats.size(); i++){
             this->my_vector_value_[i] = floats.at(i);
         }
-        this->length_ = floats.size();
+        this->nums_ = floats.size();
      }
 
     myVector(const float* floats, int length){
@@ -49,32 +49,37 @@ public:
         for (int i = 0; i < length; i++) {  
             my_vector_value_[i] = floats[i];  
         }  
-        this->length_ = length;
+        this->nums_ = length;
     }
 
     /* Acking666 */
     float* getVector() const{ 
-        float* floats = new float[length_];
-        for(int i = 0; i < length_; i++){
+        float* floats = new float[nums_] ;
+        for(int i = 0; i < nums_; i++){
             floats[i] = my_vector_value_[i];
         }
         return floats;
+    } 
+    
+    /* 序列化时，直接递出指针，对方能保证仅读不删*/
+    float* getVectorDirectly() const{ 
+        return my_vector_value_;
     } 
 
     void reset(){
         delete[] my_vector_value_;  ///< Attention: delete[] but not delete !!!
         my_vector_value_ = nullptr;
-        length_ = -1;
+        nums_ = -1;
     }
 
     /* 返回向量的字节长度 */
     int vecLength() const {
-        return length_ * 4;
+        return nums_ * 4;
     }
     
     /* 返回向量元素的个数 */
     int vecNum() const {
-        return length_ ;
+        return nums_ ;
     }
     
 };

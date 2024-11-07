@@ -428,6 +428,17 @@ RC Table::set_value_to_record(char *record_data, const Value &value, const Field
       copy_len = data_len + 1;
     }
   }
+
+  /* Acking666 */
+  /*  对于向量长度不匹配的情况，需报错 */
+  if(value.attr_type() == AttrType::VECTORS){
+    int vecLen = value.get_myVector().vecLength();
+    if(int(copy_len) != vecLen)  {
+      LOG_WARN("Inconsistent Length in vector type!");
+      return RC::INTERNAL;
+    }
+  }
+
   memcpy(record_data + field->offset(), value.data(), copy_len);
   return RC::SUCCESS;
 }

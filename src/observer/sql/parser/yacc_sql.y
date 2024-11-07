@@ -507,7 +507,15 @@ value:
         $$ = new Value(myVector);     
         free(tmp);
         free($1);
-      }else{
+      }
+      else if(strlen($1) >= 2 && $1[0] == '[' && $1[strlen($1)-1] == ']'){
+        char * tmp = common::substr($1, 1, strlen($1)-2);
+        myVector myVector (tmp);  // 此时已经提取出数字了，指针可以释放
+        $$ = new Value(myVector);     
+        free(tmp);
+        free($1);
+      }
+      else{
         char *tmp = common::substr($1,1,strlen($1)-2);
         $$ = new Value(tmp);
         free(tmp);
