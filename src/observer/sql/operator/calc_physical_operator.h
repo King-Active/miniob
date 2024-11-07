@@ -41,7 +41,6 @@ public:
     }
     emitted_ = true;
 
-/* Acking666 暂时删除以下不明所以的代码，会导致重复计算 */
     int cell_num = tuple_.cell_num();
     for (int i = 0; i < cell_num; i++) {
       Value value;
